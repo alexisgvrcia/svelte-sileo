@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { setPosition, sileo } from "$lib";
+    import { setPosition } from "$lib";
     import type { SileoPosition } from "$lib/types";
     import Footer from "../components/footer.svelte";
     import Hero from "../components/hero.svelte";
@@ -9,7 +9,6 @@
     let position = $state<SileoPosition>("top-right");
 
     function handlePositionChange(pos: SileoPosition) {
-        sileo.clear();
         setPosition(pos);
         position = pos;
     }

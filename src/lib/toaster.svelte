@@ -132,6 +132,17 @@
             }
         }
 
+        const sliding = toasts.filter((t) => t.slideFrom);
+        if (sliding.length > 0) {
+            setTimeout(() => {
+                toastStore.update((prev) =>
+                    prev.map((t) =>
+                        t.slideFrom ? { ...t, slideFrom: undefined } : t,
+                    ),
+                );
+            }, 700);
+        }
+
         schedule(toasts);
     });
 
@@ -199,27 +210,32 @@
     >
         {#each items as item (item.id)}
             {@const h = getHandlers(item.id)}
-            <Sileo
-                id={item.id}
-                toastState={item.state}
-                title={item.title}
-                description={item.description}
-                position={pill}
-                expand={expandDirection}
-                icon={item.icon}
-                fill={item.fill}
-                styles={item.styles}
-                button={item.button}
-                roundness={item.roundness}
-                exiting={item.exiting}
-                autoExpandDelayMs={item.autoExpandDelayMs}
-                autoCollapseDelayMs={item.autoCollapseDelayMs}
-                refreshKey={item.instanceId}
-                canExpand={activeId === undefined || activeId === item.id}
-                onmouseenter={h.enter}
-                onmouseleave={h.leave}
-                onDismiss={h.dismiss}
-            />
+            <div
+                data-sileo-slide-wrapper
+                data-slide-from={item.slideFrom ?? undefined}
+            >
+                <Sileo
+                    id={item.id}
+                    toastState={item.state}
+                    title={item.title}
+                    description={item.description}
+                    position={pill}
+                    expand={expandDirection}
+                    icon={item.icon}
+                    fill={item.fill}
+                    styles={item.styles}
+                    button={item.button}
+                    roundness={item.roundness}
+                    exiting={item.exiting}
+                    autoExpandDelayMs={item.autoExpandDelayMs}
+                    autoCollapseDelayMs={item.autoCollapseDelayMs}
+                    refreshKey={item.instanceId}
+                    canExpand={activeId === undefined || activeId === item.id}
+                    onmouseenter={h.enter}
+                    onmouseleave={h.leave}
+                    onDismiss={h.dismiss}
+                />
+            </div>
         {/each}
     </section>
 {/each}

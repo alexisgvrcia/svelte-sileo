@@ -18,6 +18,8 @@ export interface SileoItem extends InternalSileoOptions {
   exiting?: boolean;
   autoExpandDelayMs?: number;
   autoCollapseDelayMs?: number;
+  _explicitPosition?: boolean;
+  slideFrom?: "left" | "right" | "up" | "down";
 }
 
 export const toastStore = writable<SileoItem[]>([]);
@@ -25,8 +27,44 @@ export const toastStore = writable<SileoItem[]>([]);
 let storePosition: SileoPosition = "top-right";
 let storeOptions: Partial<SileoOptions> | undefined;
 
+const getSlideDirection = (
+  from: SileoPosition,
+  to: SileoPosition,
+): "left" | "right" | "up" | "down" | undefined => {
+  const fromH = from.endsWith("left")
+    ? "left"
+    : from.endsWith("right")
+      ? "right"
+      : "center";
+  const toH = to.endsWith("left")
+    ? "left"
+    : to.endsWith("right")
+      ? "right"
+      : "center";
+  const fromV = from.startsWith("top") ? "top" : "bottom";
+  const toV = to.startsWith("top") ? "top" : "bottom";
+
+  if (fromH !== toH) {
+    const order = { left: 0, center: 1, right: 2 };
+    return order[fromH] < order[toH] ? "left" : "right";
+  }
+  if (fromV !== toV) {
+    return fromV === "top" ? "up" : "down";
+  }
+  return undefined;
+};
+
 export function setPosition(pos: SileoPosition) {
+  const prev = storePosition;
   storePosition = pos;
+  if (prev === pos) return;
+
+  const slide = getSlideDirection(prev, pos);
+  toastStore.update((items) =>
+    items.map((t) =>
+      t._explicitPosition ? t : { ...t, position: pos, slideFrom: slide },
+    ),
+  );
 }
 
 export function setOptions(opts: Partial<SileoOptions> | undefined) {
@@ -78,11 +116,13 @@ const buildSileoItem = (
 ): SileoItem => {
   const duration = merged.duration ?? DEFAULT_TOAST_DURATION;
   const auto = resolveAutopilot(merged, duration);
+  const hasExplicit = merged.position !== undefined;
   return {
     ...merged,
     id,
     instanceId: generateId(),
     position: merged.position ?? fallbackPosition ?? storePosition,
+    _explicitPosition: hasExplicit || undefined,
     autoExpandDelayMs: auto.expandDelayMs,
     autoCollapseDelayMs: auto.collapseDelayMs,
   };

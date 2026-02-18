@@ -1,41 +1,39 @@
 /* -------------------------------- Variables ------------------------------- */
 
 :root {
-    --sileo-spring-easing: linear(
-        0,
-        0.002 0.6%,
-        0.007 1.2%,
-        0.015 1.8%,
-        0.026 2.4%,
-        0.041 3.1%,
-        0.06 3.8%,
-        0.108 5.3%,
-        0.157 6.6%,
-        0.214 8%,
-        0.467 13.7%,
-        0.577 16.3%,
-        0.631 17.7%,
-        0.682 19.1%,
-        0.73 20.5%,
-        0.771 21.8%,
-        0.808 23.1%,
-        0.844 24.5%,
-        0.874 25.8%,
-        0.903 27.2%,
-        0.928 28.6%,
-        0.952 30.1%,
-        0.972 31.6%,
-        0.988 33.1%,
-        1.01 35.7%,
-        1.025 38.5%,
-        1.034 41.6%,
-        1.038 45%,
-        1.035 50.1%,
-        1.012 64.2%,
-        1.003 73%,
-        0.999 83.7%,
-        1
-    );
+    --sileo-spring-easing: linear(0,
+            0.002 0.6%,
+            0.007 1.2%,
+            0.015 1.8%,
+            0.026 2.4%,
+            0.041 3.1%,
+            0.06 3.8%,
+            0.108 5.3%,
+            0.157 6.6%,
+            0.214 8%,
+            0.467 13.7%,
+            0.577 16.3%,
+            0.631 17.7%,
+            0.682 19.1%,
+            0.73 20.5%,
+            0.771 21.8%,
+            0.808 23.1%,
+            0.844 24.5%,
+            0.874 25.8%,
+            0.903 27.2%,
+            0.928 28.6%,
+            0.952 30.1%,
+            0.972 31.6%,
+            0.988 33.1%,
+            1.01 35.7%,
+            1.025 38.5%,
+            1.034 41.6%,
+            1.038 45%,
+            1.035 50.1%,
+            1.012 64.2%,
+            1.003 73%,
+            0.999 83.7%,
+            1);
 
     --sileo-duration: 600ms;
     --sileo-height: 40px;
@@ -78,20 +76,17 @@
     transition:
         transform calc(var(--sileo-duration) * 0.66) var(--sileo-spring-easing),
         opacity calc(var(--sileo-duration) * 0.66) var(--sileo-spring-easing),
-        margin-bottom calc(var(--sileo-duration) * 0.66)
-            var(--sileo-spring-easing),
+        margin-bottom calc(var(--sileo-duration) * 0.66) var(--sileo-spring-easing),
         margin-top calc(var(--sileo-duration) * 0.66) var(--sileo-spring-easing),
         height var(--sileo-duration) var(--sileo-spring-easing);
 }
 
 /* Entry animation direction */
-[data-sileo-viewport][data-position^="top"]
-    [data-sileo-toast]:not([data-ready="true"]) {
+[data-sileo-viewport][data-position^="top"] [data-sileo-toast]:not([data-ready="true"]) {
     transform: translateY(-6px) scale(0.95);
 }
 
-[data-sileo-viewport][data-position^="bottom"]
-    [data-sileo-toast]:not([data-ready="true"]) {
+[data-sileo-viewport][data-position^="bottom"] [data-sileo-toast]:not([data-ready="true"]) {
     transform: translateY(6px) scale(0.95);
 }
 
@@ -101,13 +96,11 @@
     pointer-events: none;
 }
 
-[data-sileo-viewport][data-position^="top"]
-    [data-sileo-toast][data-ready="true"][data-exiting="true"] {
+[data-sileo-viewport][data-position^="top"] [data-sileo-toast][data-ready="true"][data-exiting="true"] {
     transform: translateY(-6px) scale(0.95);
 }
 
-[data-sileo-viewport][data-position^="bottom"]
-    [data-sileo-toast][data-ready="true"][data-exiting="true"] {
+[data-sileo-viewport][data-position^="bottom"] [data-sileo-toast][data-ready="true"][data-exiting="true"] {
     transform: translateY(6px) scale(0.95);
 }
 
@@ -189,8 +182,7 @@
 [data-sileo-header-inner][data-layer="current"] {
     position: relative;
     z-index: 1;
-    animation: sileo-header-enter var(--sileo-duration)
-        var(--sileo-spring-easing) both;
+    animation: sileo-header-enter var(--sileo-duration) var(--sileo-spring-easing) both;
 }
 
 [data-sileo-header-inner][data-layer="current"]:not(:only-child),
@@ -242,43 +234,33 @@
     --_c: var(--sileo-state-success);
 }
 
-:is(
-    [data-sileo-badge],
+:is([data-sileo-badge],
     [data-sileo-title],
-    [data-sileo-button]
-)[data-state="loading"] {
+    [data-sileo-button])[data-state="loading"] {
     --_c: var(--sileo-state-loading);
 }
 
-:is(
-    [data-sileo-badge],
+:is([data-sileo-badge],
     [data-sileo-title],
-    [data-sileo-button]
-)[data-state="error"] {
+    [data-sileo-button])[data-state="error"] {
     --_c: var(--sileo-state-error);
 }
 
-:is(
-    [data-sileo-badge],
+:is([data-sileo-badge],
     [data-sileo-title],
-    [data-sileo-button]
-)[data-state="warning"] {
+    [data-sileo-button])[data-state="warning"] {
     --_c: var(--sileo-state-warning);
 }
 
-:is(
-    [data-sileo-badge],
+:is([data-sileo-badge],
     [data-sileo-title],
-    [data-sileo-button]
-)[data-state="info"] {
+    [data-sileo-button])[data-state="info"] {
     --_c: var(--sileo-state-info);
 }
 
-:is(
-    [data-sileo-badge],
+:is([data-sileo-badge],
     [data-sileo-title],
-    [data-sileo-button]
-)[data-state="action"] {
+    [data-sileo-button])[data-state="action"] {
     --_c: var(--sileo-state-action);
 }
 
@@ -303,8 +285,7 @@
 }
 
 [data-sileo-toast][data-ready="true"] [data-sileo-content] {
-    transition: opacity calc(var(--sileo-duration) * 0.08) ease
-        calc(var(--sileo-duration) * 0.04);
+    transition: opacity calc(var(--sileo-duration) * 0.08) ease calc(var(--sileo-duration) * 0.04);
 }
 
 [data-sileo-content][data-edge="top"] {
@@ -319,10 +300,8 @@
     pointer-events: auto;
 }
 
-[data-sileo-toast][data-ready="true"]
-    [data-sileo-content][data-visible="true"] {
-    transition: opacity calc(var(--sileo-duration) * 0.6) ease
-        calc(var(--sileo-duration) * 0.3);
+[data-sileo-toast][data-ready="true"] [data-sileo-content][data-visible="true"] {
+    transition: opacity calc(var(--sileo-duration) * 0.6) ease calc(var(--sileo-duration) * 0.3);
 }
 
 [data-sileo-description] {
@@ -382,6 +361,7 @@
         opacity: 0;
         filter: blur(6px);
     }
+
     to {
         opacity: 1;
         filter: blur(0px);
@@ -393,10 +373,33 @@
         opacity: 1;
         filter: blur(0px);
     }
+
     to {
         opacity: 0;
         filter: blur(6px);
     }
+}
+
+/* ----------------------------- Slide Wrapper ------------------------------ */
+
+[data-sileo-slide-wrapper] {
+    display: contents;
+}
+
+[data-sileo-slide-wrapper][data-slide-from="left"]>[data-sileo-toast]:not([data-ready="true"]) {
+    transform: translateX(-40px) scale(0.95);
+}
+
+[data-sileo-slide-wrapper][data-slide-from="right"]>[data-sileo-toast]:not([data-ready="true"]) {
+    transform: translateX(40px) scale(0.95);
+}
+
+[data-sileo-slide-wrapper][data-slide-from="up"]>[data-sileo-toast]:not([data-ready="true"]) {
+    transform: translateY(-40px) scale(0.95);
+}
+
+[data-sileo-slide-wrapper][data-slide-from="down"]>[data-sileo-toast]:not([data-ready="true"]) {
+    transform: translateY(40px) scale(0.95);
 }
 
 /* -------------------------------- Viewports ------------------------------- */
@@ -412,13 +415,11 @@
     contain: layout style;
 }
 
-[data-sileo-viewport][data-position^="top"]
-    [data-sileo-toast]:not([data-ready="true"]) {
+[data-sileo-viewport][data-position^="top"] [data-sileo-toast]:not([data-ready="true"]) {
     margin-bottom: calc(-1 * (var(--sileo-height) + 0.75rem));
 }
 
-[data-sileo-viewport][data-position^="bottom"]
-    [data-sileo-toast]:not([data-ready="true"]) {
+[data-sileo-viewport][data-position^="bottom"] [data-sileo-toast]:not([data-ready="true"]) {
     margin-top: calc(-1 * (var(--sileo-height) + 0.75rem));
 }
 
@@ -451,6 +452,7 @@
 }
 
 @media (prefers-reduced-motion: no-preference) {
+
     [data-sileo-toast][data-ready="true"]:hover,
     [data-sileo-toast][data-ready="true"][data-exiting="true"] {
         will-change: transform, opacity, height;
@@ -458,6 +460,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+
     *,
     *::before,
     *::after {
