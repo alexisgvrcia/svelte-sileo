@@ -400,6 +400,14 @@
 
         if (open) {
             pending = { key: currentRefreshKey, payload: currentNext };
+            if (autoExpandTimer) {
+                clearTimeout(autoExpandTimer);
+                autoExpandTimer = null;
+            }
+            if (autoCollapseTimer) {
+                clearTimeout(autoCollapseTimer);
+                autoCollapseTimer = null;
+            }
             isExpanded = false;
             swapTimer = setTimeout(() => {
                 swapTimer = null;
@@ -417,6 +425,10 @@
 
     $effect(() => {
         void applied;
+        if (pending) {
+            isExpanded = false;
+            return;
+        }
         if (!hasDesc) return;
 
         if (autoExpandTimer) clearTimeout(autoExpandTimer);
@@ -463,8 +475,7 @@
     }
 
     function handleTransitionEnd(e: TransitionEvent) {
-        if (e.propertyName !== "height" && e.propertyName !== "transform")
-            return;
+        if (e.propertyName !== "height") return;
         if (open) return;
         if (!pending) return;
         if (swapTimer) {
