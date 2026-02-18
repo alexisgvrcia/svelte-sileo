@@ -37,6 +37,7 @@ export const SILEO_POSITIONS = [
 export type SileoPosition = (typeof SILEO_POSITIONS)[number];
 
 export interface SileoOptions {
+  id?: string;
   title?: string;
   description?: SileoDescription;
   position?: SileoPosition;

@@ -24,6 +24,7 @@ An opinionated toast component for Svelte. Gooey SVG morphing, spring physics, a
 - **Custom Icons** — Swap the default state icon with any Svelte component.
 - **Action Button** — Inline button with a callback, styled per toast state.
 - **Autopilot** — Toasts auto-expand to show the description, then collapse before dismissing.
+- **Single by default** — Replaces the current toast unless you enable `multiple`.
 - **Swipe to dismiss** — Native swipe gesture support on mobile.
 - **6 Positions** — `top-left`, `top-center`, `top-right`, `bottom-left`, `bottom-center`, `bottom-right`.
 - **Fully typed** — Written in TypeScript with full type coverage.
@@ -53,6 +54,8 @@ Add `<Toaster />` to your layout. Then call `sileo` from anywhere.
   Toast
 </button>
 ```
+
+`<Toaster />` is single-toast by default. Use `<Toaster multiple />` to stack multiple toasts.
 
 ## API
 
@@ -113,6 +116,8 @@ sileo.promise(
 );
 ```
 
+`loading` accepts only `{ title, icon }`. Use `success`, `error`, or `action` for `description`, `button`, and style overrides.
+
 You can also pass a function to `success` or `error` to use the resolved value or error:
 
 ```ts
@@ -154,7 +159,7 @@ sileo.dismiss(id);
 
 ### `sileo.clear(position?)`
 
-Dismiss all toasts, optionally scoped to a position.
+Remove all toasts immediately, optionally scoped to a position.
 
 ```ts
 sileo.clear();
@@ -167,10 +172,11 @@ Every method accepts a `SileoOptions` object:
 
 | Option | Type | Description |
 |---|---|---|
+| `id` | `string` | Optional stable id for in-place updates/replacement. In single mode, omitting it uses a shared id (`sileo-default`). In multiple mode, omitting it generates a unique id. |
 | `title` | `string` | Main toast text. |
 | `description` | `string \| Component` | Expandable body. Accepts plain text or a Svelte component. |
 | `button` | `{ title: string, onClick: () => void }` | Inline action button. |
-| `icon` | `Component \| null` | Replaces the default state icon. |
+| `icon` | `Component \| null` | Replaces the default state icon. Pass `null` to hide the icon. |
 | `duration` | `number \| null` | Auto-dismiss delay in ms. `null` = persistent. Default `6000`. |
 | `position` | `SileoPosition` | Overrides the `<Toaster>` position for this toast. |
 | `fill` | `string` | Background fill color of the pill. Default `#FFFFFF`. |
@@ -184,7 +190,22 @@ Every method accepts a `SileoOptions` object:
 |---|---|---|---|
 | `position` | `SileoPosition` | `top-right` | Where toasts appear. |
 | `offset` | `number \| string \| object` | — | Edge offset. Accepts a value or `{ top, right, bottom, left }`. |
+| `multiple` | `boolean` | `false` | `false`: single-toast mode (replace current). `true`: stack multiple toasts. |
 | `options` | `Partial<SileoOptions>` | — | Default options applied to every toast. |
+
+## Single vs Multiple
+
+Single mode is the default:
+
+```svelte
+<Toaster />
+```
+
+Multiple mode:
+
+```svelte
+<Toaster multiple />
+```
 
 ## Custom Description Component
 
@@ -241,6 +262,16 @@ Updates the default options dynamically.
 import { setOptions } from 'svelte-sileo';
 
 setOptions({ duration: 3000 });
+```
+
+### `setMultiple(enabled)`
+
+Toggles single/multiple mode programmatically.
+
+```ts
+import { setMultiple } from 'svelte-sileo';
+
+setMultiple(true);
 ```
 
  ## Styling

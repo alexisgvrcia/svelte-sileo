@@ -607,22 +607,24 @@
                     data-sileo-header-inner
                     data-layer="current"
                 >
-                    <div
-                        data-sileo-badge
-                        data-state={headerLayer.current.view.toastState}
-                        class={headerLayer.current.view.styles?.badge}
-                    >
-                        {#if headerLayer.current.view.icon}
-                            {@const IconComp = headerLayer.current.view.icon}
-                            <IconComp />
-                        {:else}
-                            {@const DefaultIcon =
-                                STATE_ICONS[
-                                    headerLayer.current.view.toastState
-                                ]}
-                            <DefaultIcon />
-                        {/if}
-                    </div>
+                    {#if headerLayer.current.view.icon !== null}
+                        <div
+                            data-sileo-badge
+                            data-state={headerLayer.current.view.toastState}
+                            class={headerLayer.current.view.styles?.badge}
+                        >
+                            {#if headerLayer.current.view.icon}
+                                {@const IconComp = headerLayer.current.view.icon}
+                                <IconComp />
+                            {:else}
+                                {@const DefaultIcon =
+                                    STATE_ICONS[
+                                        headerLayer.current.view.toastState
+                                    ]}
+                                <DefaultIcon />
+                            {/if}
+                        </div>
+                    {/if}
                     <span
                         data-sileo-title
                         data-state={headerLayer.current.view.toastState}
@@ -638,20 +640,22 @@
                     data-layer="prev"
                     data-exiting="true"
                 >
-                    <div
-                        data-sileo-badge
-                        data-state={headerLayer.prev.view.toastState}
-                        class={headerLayer.prev.view.styles?.badge}
-                    >
-                        {#if headerLayer.prev.view.icon}
-                            {@const PrevIconComp = headerLayer.prev.view.icon}
-                            <PrevIconComp />
-                        {:else}
-                            {@const PrevDefaultIcon =
-                                STATE_ICONS[headerLayer.prev.view.toastState]}
-                            <PrevDefaultIcon />
-                        {/if}
-                    </div>
+                    {#if headerLayer.prev.view.icon !== null}
+                        <div
+                            data-sileo-badge
+                            data-state={headerLayer.prev.view.toastState}
+                            class={headerLayer.prev.view.styles?.badge}
+                        >
+                            {#if headerLayer.prev.view.icon}
+                                {@const PrevIconComp = headerLayer.prev.view.icon}
+                                <PrevIconComp />
+                            {:else}
+                                {@const PrevDefaultIcon =
+                                    STATE_ICONS[headerLayer.prev.view.toastState]}
+                                <PrevDefaultIcon />
+                            {/if}
+                        </div>
+                    {/if}
                     <span
                         data-sileo-title
                         data-state={headerLayer.prev.view.toastState}

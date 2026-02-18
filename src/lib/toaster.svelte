@@ -5,7 +5,7 @@
     import { DEFAULT_TOAST_DURATION } from "./constants";
     import Sileo from "./sileo.svelte";
     import type { SileoItem } from "./store";
-    import { setOptions, setPosition, toastStore } from "./store";
+    import { setMultiple, setOptions, setPosition, toastStore } from "./store";
     import type { SileoOptions, SileoPosition } from "./types";
     import "./styles.css";
 
@@ -18,10 +18,17 @@
         children?: Snippet;
         position?: SileoPosition;
         offset?: SileoOffsetValue | SileoOffsetConfig;
+        multiple?: boolean;
         options?: Partial<SileoOptions>;
     }
 
-    let { children, position = "top-right", offset, options }: Props = $props();
+    let {
+        children,
+        position = "top-right",
+        offset,
+        multiple = false,
+        options,
+    }: Props = $props();
 
     const pillAlign = (pos: SileoPosition) =>
         pos.includes("right")
@@ -50,6 +57,7 @@
 
     $effect(() => {
         setPosition(position);
+        setMultiple(multiple);
         setOptions(options);
     });
 

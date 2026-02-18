@@ -26,6 +26,7 @@ export const toastStore = writable<SileoItem[]>([]);
 
 let storePosition: SileoPosition = "top-right";
 let storeOptions: Partial<SileoOptions> | undefined;
+let storeMultiple = false;
 
 const getSlideDirection = (
   from: SileoPosition,
@@ -69,6 +70,10 @@ export function setPosition(pos: SileoPosition) {
 
 export function setOptions(opts: Partial<SileoOptions> | undefined) {
   storeOptions = opts;
+}
+
+export function setMultiple(enabled: boolean) {
+  storeMultiple = enabled;
 }
 
 let idCounter = 0;
@@ -133,11 +138,13 @@ const createToast = (options: InternalSileoOptions) => {
   const live = items.filter((t) => !t.exiting);
   const merged = mergeOptions(options);
 
-  const id = merged.id ?? "sileo-default";
+  const id = merged.id ?? (storeMultiple ? generateId() : "sileo-default");
   const prev = live.find((t) => t.id === id);
   const item = buildSileoItem(merged, id, prev?.position);
 
-  if (prev) {
+  if (!storeMultiple) {
+    toastStore.set([item]);
+  } else if (prev) {
     toastStore.update((p) => p.map((t) => (t.id === id ? item : t)));
   } else {
     toastStore.update((p) => [...p.filter((t) => t.id !== id), item]);
@@ -163,7 +170,7 @@ export interface SileoPromiseOptions<T = unknown> {
 }
 
 export const sileo = {
-  show: (opts: SileoOptions) => createToast(opts).id,
+  show: (opts: SileoOptions) => createToast({ ...opts, icon: opts.icon ?? null }).id,
   success: (opts: SileoOptions) =>
     createToast({ ...opts, state: "success" }).id,
   error: (opts: SileoOptions) => createToast({ ...opts, state: "error" }).id,
