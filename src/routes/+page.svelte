@@ -1,6 +1,7 @@
 <script lang="ts">
-    import { setPosition } from "$lib";
+    import { sileo } from "$lib";
     import type { SileoPosition } from "$lib/types";
+    import DocsReference from "../components/docs-reference.svelte";
     import Footer from "../components/footer.svelte";
     import Hero from "../components/hero.svelte";
     import QuickSetup from "../components/quick-setup.svelte";
@@ -9,7 +10,7 @@
     let position = $state<SileoPosition>("top-right");
 
     function handlePositionChange(pos: SileoPosition) {
-        setPosition(pos);
+        sileo.setPosition(pos);
         position = pos;
     }
 </script>
@@ -20,6 +21,7 @@
             <Hero />
             <QuickSetup />
             <ToastDemo {position} onpositionchange={handlePositionChange} />
+            <DocsReference />
         </div>
         <Footer />
     </div>

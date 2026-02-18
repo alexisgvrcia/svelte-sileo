@@ -244,34 +244,34 @@ sileo.success({
 
 Sometimes you need to update global settings imperatively.
 
-### `setPosition(position)`
+### `sileo.setPosition(position)`
 
 Updates the toaster position dynamically.
 
 ```ts
-import { setPosition } from 'svelte-sileo';
+import { sileo } from 'svelte-sileo';
 
-setPosition('bottom-center');
+sileo.setPosition('bottom-center');
 ```
 
-### `setOptions(options)`
+### `sileo.setOptions(options)`
 
 Updates the default options dynamically.
 
 ```ts
-import { setOptions } from 'svelte-sileo';
+import { sileo } from 'svelte-sileo';
 
-setOptions({ duration: 3000 });
+sileo.setOptions({ duration: 3000 });
 ```
 
-### `setMultiple(enabled)`
+### `sileo.setMultiple(enabled)`
 
 Toggles single/multiple mode programmatically.
 
 ```ts
-import { setMultiple } from 'svelte-sileo';
+import { sileo } from 'svelte-sileo';
 
-setMultiple(true);
+sileo.setMultiple(true);
 ```
 
  ## Styling
