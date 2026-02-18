@@ -1,7 +1,7 @@
 <script lang="ts">
-    import { spring } from "svelte/motion";
-    import { onMount } from "svelte";
     import type { Component } from "svelte";
+    import { onMount } from "svelte";
+    import { spring } from "svelte/motion";
     import {
         BLUR_RATIO,
         DEFAULT_ROUNDNESS,
@@ -13,21 +13,23 @@
         SWAP_COLLAPSE_MS,
         WIDTH,
     } from "./constants";
-    import type { SileoButton, SileoState, SileoStyles } from "./types";
-
     import ArrowRight from "./icons/ArrowRight.svelte";
     import Check from "./icons/Check.svelte";
     import CircleAlert from "./icons/CircleAlert.svelte";
     import LifeBuoy from "./icons/LifeBuoy.svelte";
     import LoaderCircle from "./icons/LoaderCircle.svelte";
     import XIcon from "./icons/X.svelte";
+    import type { SileoButton, SileoState, SileoStyles } from "./types";
 
     interface Props {
         id: string;
         fill?: string;
         toastState?: SileoState;
         title?: string;
-        description?: string | Component | (abstract new (...args: any[]) => any);
+        description?:
+            | string
+            | Component
+            | (abstract new (...args: any[]) => any);
         position?: "left" | "center" | "right";
         expand?: "top" | "bottom";
         className?: string;
@@ -81,7 +83,10 @@
 
     interface View {
         title?: string;
-        description?: string | Component | (abstract new (...args: any[]) => any);
+        description?:
+            | string
+            | Component
+            | (abstract new (...args: any[]) => any);
         toastState: SileoState;
         icon?: Component | null;
         styles?: SileoStyles;
@@ -149,7 +154,7 @@
         }
     });
 
-    let isDescComponent = $derived(typeof view.description === 'function');
+    let isDescComponent = $derived(typeof view.description === "function");
     let hasDesc = $derived(Boolean(view.description) || Boolean(view.button));
     let isLoading = $derived(view.toastState === "loading");
     let open = $derived(hasDesc && isExpanded && !isLoading);
@@ -175,7 +180,7 @@
     let autoExpandTimer: ReturnType<typeof setTimeout> | null = null;
     let autoCollapseTimer: ReturnType<typeof setTimeout> | null = null;
     let swapTimer: ReturnType<typeof setTimeout> | null = null;
-    let lastRefreshKey: string | undefined = undefined;
+    let lastRefreshKey: string | undefined;
     let pending: { key?: string; payload: View } | null = null;
 
     const pillSpring = spring(

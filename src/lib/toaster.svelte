@@ -1,206 +1,225 @@
 <script lang="ts">
-	import { onDestroy } from 'svelte';
-	import type { Snippet } from 'svelte';
-	import { SvelteMap } from 'svelte/reactivity';
-	import { DEFAULT_TOAST_DURATION } from './constants';
-	import Sileo from './sileo.svelte';
-	import { toastStore, setStorePosition, setStoreOptions } from './store';
-	import type { SileoItem } from './store';
-	import type { SileoOptions, SileoPosition } from './types';
-	import './styles.css';
+    import type { Snippet } from "svelte";
+    import { onDestroy } from "svelte";
+    import { SvelteMap } from "svelte/reactivity";
+    import { DEFAULT_TOAST_DURATION } from "./constants";
+    import Sileo from "./sileo.svelte";
+    import type { SileoItem } from "./store";
+    import { setOptions, setPosition, toastStore } from "./store";
+    import type { SileoOptions, SileoPosition } from "./types";
+    import "./styles.css";
 
-	type SileoOffsetValue = number | string;
-	type SileoOffsetConfig = Partial<Record<'top' | 'right' | 'bottom' | 'left', SileoOffsetValue>>;
+    type SileoOffsetValue = number | string;
+    type SileoOffsetConfig = Partial<
+        Record<"top" | "right" | "bottom" | "left", SileoOffsetValue>
+    >;
 
-	interface Props {
-		children?: Snippet;
-		position?: SileoPosition;
-		offset?: SileoOffsetValue | SileoOffsetConfig;
-		options?: Partial<SileoOptions>;
-	}
+    interface Props {
+        children?: Snippet;
+        position?: SileoPosition;
+        offset?: SileoOffsetValue | SileoOffsetConfig;
+        options?: Partial<SileoOptions>;
+    }
 
-	let { children, position = 'top-right', offset, options }: Props = $props();
+    let { children, position = "top-right", offset, options }: Props = $props();
 
-	const pillAlign = (pos: SileoPosition) =>
-		pos.includes('right') ? 'right' : pos.includes('center') ? 'center' : 'left';
-	const expandDir = (pos: SileoPosition) =>
-		pos.startsWith('top') ? ('bottom' as const) : ('top' as const);
+    const pillAlign = (pos: SileoPosition) =>
+        pos.includes("right")
+            ? "right"
+            : pos.includes("center")
+              ? "center"
+              : "left";
+    const expandDir = (pos: SileoPosition) =>
+        pos.startsWith("top") ? ("bottom" as const) : ("top" as const);
 
-	const timeoutKey = (t: SileoItem) => `${t.id}:${t.instanceId}`;
+    const timeoutKey = (t: SileoItem) => `${t.id}:${t.instanceId}`;
 
-	let toasts = $state<SileoItem[]>([]);
-	let hoveredId = $state<string | undefined>(undefined);
-	let hovering = $derived(hoveredId !== undefined);
-	const timers = new SvelteMap<string, ReturnType<typeof setTimeout>>();
+    let toasts = $state<SileoItem[]>([]);
+    let hoveredId = $state<string | undefined>(undefined);
+    let hovering = $derived(hoveredId !== undefined);
+    const timers = new SvelteMap<string, ReturnType<typeof setTimeout>>();
 
-	const handlersCache = new SvelteMap<
-		string,
-		{
-			enter: () => void;
-			leave: () => void;
-			dismiss: () => void;
-		}
-	>();
+    const handlersCache = new SvelteMap<
+        string,
+        {
+            enter: () => void;
+            leave: () => void;
+            dismiss: () => void;
+        }
+    >();
 
-	$effect(() => {
-		setStorePosition(position);
-		setStoreOptions(options);
-	});
+    $effect(() => {
+        setPosition(position);
+        setOptions(options);
+    });
 
-	const unsubscribe = toastStore.subscribe((value) => {
-		toasts = value;
-	});
+    const unsubscribe = toastStore.subscribe((value) => {
+        toasts = value;
+    });
 
-	onDestroy(() => {
-		unsubscribe();
-		clearAllTimers();
-	});
+    onDestroy(() => {
+        unsubscribe();
+        clearAllTimers();
+    });
 
-	function clearAllTimers() {
-		for (const t of timers.values()) clearTimeout(t);
-		timers.clear();
-	}
+    function clearAllTimers() {
+        for (const t of timers.values()) clearTimeout(t);
+        timers.clear();
+    }
 
-	function dismissToast(id: string) {
-		const item = toasts.find((t) => t.id === id);
-		if (!item || item.exiting) return;
+    function dismissToast(id: string) {
+        const item = toasts.find((t) => t.id === id);
+        if (!item || item.exiting) return;
 
-		toastStore.update((prev) => prev.map((t) => (t.id === id ? { ...t, exiting: true } : t)));
+        toastStore.update((prev) =>
+            prev.map((t) => (t.id === id ? { ...t, exiting: true } : t)),
+        );
 
-		const exitDuration = DEFAULT_TOAST_DURATION * 0.1;
-		setTimeout(() => toastStore.update((prev) => prev.filter((t) => t.id !== id)), exitDuration);
-	}
+        const exitDuration = DEFAULT_TOAST_DURATION * 0.1;
+        setTimeout(
+            () => toastStore.update((prev) => prev.filter((t) => t.id !== id)),
+            exitDuration,
+        );
+    }
 
-	function schedule(items: SileoItem[]) {
-		if (hovering) return;
+    function schedule(items: SileoItem[]) {
+        if (hovering) return;
 
-		for (const item of items) {
-			if (item.exiting) continue;
-			const key = timeoutKey(item);
-			if (timers.has(key)) continue;
+        for (const item of items) {
+            if (item.exiting) continue;
+            const key = timeoutKey(item);
+            if (timers.has(key)) continue;
 
-			const dur = item.duration ?? DEFAULT_TOAST_DURATION;
-			if (dur === null || dur <= 0) continue;
+            const dur = item.duration ?? DEFAULT_TOAST_DURATION;
+            if (dur === null || dur <= 0) continue;
 
-			timers.set(
-				key,
-				setTimeout(() => dismissToast(item.id), dur)
-			);
-		}
-	}
+            timers.set(
+                key,
+                setTimeout(() => dismissToast(item.id), dur),
+            );
+        }
+    }
 
-	function createHandlers(toastId: string) {
-		return {
-			enter: () => {
-				hoveredId = toastId;
-				clearAllTimers();
-			},
-			leave: () => {
-				hoveredId = undefined;
-				schedule(toasts);
-			},
-			dismiss: () => dismissToast(toastId)
-		};
-	}
+    function createHandlers(toastId: string) {
+        return {
+            enter: () => {
+                hoveredId = toastId;
+                clearAllTimers();
+            },
+            leave: () => {
+                hoveredId = undefined;
+                schedule(toasts);
+            },
+            dismiss: () => dismissToast(toastId),
+        };
+    }
 
-	$effect(() => {
-		const toastKeys = new Set(toasts.map(timeoutKey));
-		const toastIds = new Set(toasts.map((t) => t.id));
-		for (const [key, timer] of timers) {
-			if (!toastKeys.has(key)) {
-				clearTimeout(timer);
-				timers.delete(key);
-			}
-		}
-		for (const id of handlersCache.keys()) {
-			if (!toastIds.has(id)) handlersCache.delete(id);
-		}
-		for (const toast of toasts) {
-			if (!handlersCache.has(toast.id)) {
-				handlersCache.set(toast.id, createHandlers(toast.id));
-			}
-		}
+    $effect(() => {
+        const toastKeys = new Set(toasts.map(timeoutKey));
+        const toastIds = new Set(toasts.map((t) => t.id));
+        for (const [key, timer] of timers) {
+            if (!toastKeys.has(key)) {
+                clearTimeout(timer);
+                timers.delete(key);
+            }
+        }
+        for (const id of handlersCache.keys()) {
+            if (!toastIds.has(id)) handlersCache.delete(id);
+        }
+        for (const toast of toasts) {
+            if (!handlersCache.has(toast.id)) {
+                handlersCache.set(toast.id, createHandlers(toast.id));
+            }
+        }
 
-		schedule(toasts);
-	});
+        schedule(toasts);
+    });
 
-	let latest = $derived.by(() => {
-		for (let i = toasts.length - 1; i >= 0; i--) {
-			if (!toasts[i].exiting) return toasts[i].id;
-		}
-		return undefined;
-	});
+    let latest = $derived.by(() => {
+        for (let i = toasts.length - 1; i >= 0; i--) {
+            if (!toasts[i].exiting) return toasts[i].id;
+        }
+        return undefined;
+    });
 
-	let activeId = $derived(hoveredId ?? latest);
+    let activeId = $derived(hoveredId ?? latest);
 
-	function getHandlers(toastId: string) {
-		return handlersCache.get(toastId)!;
-	}
+    function getHandlers(toastId: string) {
+        return handlersCache.get(toastId)!;
+    }
 
-	function getViewportStyle(pos: SileoPosition): string {
-		if (offset === undefined) return '';
+    function getViewportStyle(pos: SileoPosition): string {
+        if (offset === undefined) return "";
 
-		const o =
-			typeof offset === 'object'
-				? offset
-				: { top: offset, right: offset, bottom: offset, left: offset };
+        const o =
+            typeof offset === "object"
+                ? offset
+                : { top: offset, right: offset, bottom: offset, left: offset };
 
-		const px = (v: SileoOffsetValue) => (typeof v === 'number' ? `${v}px` : v);
+        const px = (v: SileoOffsetValue) =>
+            typeof v === "number" ? `${v}px` : v;
 
-		const parts: string[] = [];
-		if (pos.startsWith('top') && o.top) parts.push(`top:${px(o.top)}`);
-		if (pos.startsWith('bottom') && o.bottom) parts.push(`bottom:${px(o.bottom)}`);
-		if (pos.endsWith('left') && o.left) parts.push(`left:${px(o.left)}`);
-		if (pos.endsWith('right') && o.right) parts.push(`right:${px(o.right)}`);
+        const parts: string[] = [];
+        if (pos.startsWith("top") && o.top) parts.push(`top:${px(o.top)}`);
+        if (pos.startsWith("bottom") && o.bottom)
+            parts.push(`bottom:${px(o.bottom)}`);
+        if (pos.endsWith("left") && o.left) parts.push(`left:${px(o.left)}`);
+        if (pos.endsWith("right") && o.right)
+            parts.push(`right:${px(o.right)}`);
 
-		return parts.join(';');
-	}
+        return parts.join(";");
+    }
 
-	let activePositions = $derived.by(() => {
-		const map = new SvelteMap<SileoPosition, SileoItem[]>();
-		for (const t of toasts) {
-			const pos = t.position ?? position;
-			const arr = map.get(pos);
-			if (arr) {
-				arr.push(t);
-			} else {
-				map.set(pos, [t]);
-			}
-		}
-		return map;
-	});
+    let activePositions = $derived.by(() => {
+        const map = new SvelteMap<SileoPosition, SileoItem[]>();
+        for (const t of toasts) {
+            const pos = t.position ?? position;
+            const arr = map.get(pos);
+            if (arr) {
+                arr.push(t);
+            } else {
+                map.set(pos, [t]);
+            }
+        }
+        return map;
+    });
 </script>
 
 {#if children}
-	{@render children()}
+    {@render children()}
 {/if}
 {#each [...activePositions] as [pos, items] (pos)}
-	{@const pill = pillAlign(pos)}
-	{@const expandDirection = expandDir(pos)}
-	<section data-sileo-viewport data-position={pos} aria-live="polite" style={getViewportStyle(pos)}>
-		{#each items as item (item.id)}
-			{@const h = getHandlers(item.id)}
-			<Sileo
-				id={item.id}
-				toastState={item.state}
-				title={item.title}
-				description={item.description}
-				position={pill}
-				expand={expandDirection}
-				icon={item.icon}
-				fill={item.fill}
-				styles={item.styles}
-				button={item.button}
-				roundness={item.roundness}
-				exiting={item.exiting}
-				autoExpandDelayMs={item.autoExpandDelayMs}
-				autoCollapseDelayMs={item.autoCollapseDelayMs}
-				refreshKey={item.instanceId}
-				canExpand={activeId === undefined || activeId === item.id}
-				onmouseenter={h.enter}
-				onmouseleave={h.leave}
-				onDismiss={h.dismiss}
-			/>
-		{/each}
-	</section>
+    {@const pill = pillAlign(pos)}
+    {@const expandDirection = expandDir(pos)}
+    <section
+        data-sileo-viewport
+        data-position={pos}
+        aria-live="polite"
+        style={getViewportStyle(pos)}
+    >
+        {#each items as item (item.id)}
+            {@const h = getHandlers(item.id)}
+            <Sileo
+                id={item.id}
+                toastState={item.state}
+                title={item.title}
+                description={item.description}
+                position={pill}
+                expand={expandDirection}
+                icon={item.icon}
+                fill={item.fill}
+                styles={item.styles}
+                button={item.button}
+                roundness={item.roundness}
+                exiting={item.exiting}
+                autoExpandDelayMs={item.autoExpandDelayMs}
+                autoCollapseDelayMs={item.autoCollapseDelayMs}
+                refreshKey={item.instanceId}
+                canExpand={activeId === undefined || activeId === item.id}
+                onmouseenter={h.enter}
+                onmouseleave={h.leave}
+                onDismiss={h.dismiss}
+            />
+        {/each}
+    </section>
 {/each}
