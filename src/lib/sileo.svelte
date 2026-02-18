@@ -590,33 +590,37 @@
 
     <div bind:this={headerEl} data-sileo-header data-edge={expand}>
         <div data-sileo-header-stack>
-            <div
-                bind:this={innerEl}
-                data-sileo-header-inner
-                data-layer="current"
-            >
+            {#key headerLayer.current.key}
                 <div
-                    data-sileo-badge
-                    data-state={headerLayer.current.view.toastState}
-                    class={headerLayer.current.view.styles?.badge}
+                    bind:this={innerEl}
+                    data-sileo-header-inner
+                    data-layer="current"
                 >
-                    {#if headerLayer.current.view.icon}
-                        {@const IconComp = headerLayer.current.view.icon}
-                        <IconComp />
-                    {:else}
-                        {@const DefaultIcon =
-                            STATE_ICONS[headerLayer.current.view.toastState]}
-                        <DefaultIcon />
-                    {/if}
+                    <div
+                        data-sileo-badge
+                        data-state={headerLayer.current.view.toastState}
+                        class={headerLayer.current.view.styles?.badge}
+                    >
+                        {#if headerLayer.current.view.icon}
+                            {@const IconComp = headerLayer.current.view.icon}
+                            <IconComp />
+                        {:else}
+                            {@const DefaultIcon =
+                                STATE_ICONS[
+                                    headerLayer.current.view.toastState
+                                ]}
+                            <DefaultIcon />
+                        {/if}
+                    </div>
+                    <span
+                        data-sileo-title
+                        data-state={headerLayer.current.view.toastState}
+                        class={headerLayer.current.view.styles?.title}
+                    >
+                        {headerLayer.current.view.title}
+                    </span>
                 </div>
-                <span
-                    data-sileo-title
-                    data-state={headerLayer.current.view.toastState}
-                    class={headerLayer.current.view.styles?.title}
-                >
-                    {headerLayer.current.view.title}
-                </span>
-            </div>
+            {/key}
             {#if headerLayer.prev}
                 <div
                     data-sileo-header-inner
