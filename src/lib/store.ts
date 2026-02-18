@@ -55,7 +55,7 @@ const getSlideDirection = (
   return undefined;
 };
 
-export function setPosition(pos: SileoPosition) {
+function setPosition(pos: SileoPosition) {
   const prev = storePosition;
   storePosition = pos;
   if (prev === pos) return;
@@ -68,11 +68,11 @@ export function setPosition(pos: SileoPosition) {
   );
 }
 
-export function setOptions(opts: Partial<SileoOptions> | undefined) {
+function setOptions(opts: Partial<SileoOptions> | undefined) {
   storeOptions = opts;
 }
 
-export function setMultiple(enabled: boolean) {
+function setMultiple(enabled: boolean) {
   storeMultiple = enabled;
 }
 
@@ -214,9 +214,15 @@ export const sileo = {
   },
 
   dismiss: dismissToast,
+  setPosition,
+  setOptions,
+  setMultiple,
 
-  clear: (position?: SileoPosition) =>
-    toastStore.update((prev) =>
-      position ? prev.filter((t) => t.position !== position) : [],
-    ),
+  clear: (position?: SileoPosition) => {
+    if (!position) {
+      toastStore.set([]);
+      return;
+    }
+    toastStore.update((prev) => prev.filter((t) => t.position !== position));
+  },
 };

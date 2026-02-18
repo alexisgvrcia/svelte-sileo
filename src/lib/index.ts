@@ -1,6 +1,6 @@
-export type { SileoItem, SileoPromiseOptions } from "./store";
+export type { SileoPromiseOptions } from "./store";
 
-export { setMultiple, setOptions, setPosition, sileo, toastStore } from "./store";
+export { sileo } from "./store";
 export { default as Toaster } from "./toaster.svelte";
 
 export type {

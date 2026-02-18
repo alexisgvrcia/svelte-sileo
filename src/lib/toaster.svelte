@@ -5,7 +5,7 @@
     import { DEFAULT_TOAST_DURATION } from "./constants";
     import Sileo from "./sileo.svelte";
     import type { SileoItem } from "./store";
-    import { setMultiple, setOptions, setPosition, toastStore } from "./store";
+    import { sileo, toastStore } from "./store";
     import type { SileoOptions, SileoPosition } from "./types";
     import "./styles.css";
 
@@ -56,9 +56,9 @@
     >();
 
     $effect(() => {
-        setPosition(position);
-        setMultiple(multiple);
-        setOptions(options);
+        sileo.setPosition(position);
+        sileo.setMultiple(multiple);
+        sileo.setOptions(options);
     });
 
     const unsubscribe = toastStore.subscribe((value) => {
