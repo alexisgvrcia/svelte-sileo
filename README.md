@@ -1,6 +1,6 @@
 <div align="center">
 
-https://github.com/gvrciary/svelte-sileo/assets/demo-video.mp4
+https://github.com/user-attachments/assets/b9da913b-36ef-4b14-853b-3889db112de8
 
 # Svelte-Sileo
 
