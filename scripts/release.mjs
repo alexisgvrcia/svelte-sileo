@@ -36,7 +36,7 @@ const tag = `v${version}`;
 
 run("git add package.json pnpm-lock.yaml");
 run(`git commit -m "release: ${tag}"`);
-run(`git tag ${tag}`);
+run(`git tag -a ${tag} -m "release: ${tag}"`);
 run("git push --follow-tags");
 
 console.log(`Created, tagged, and pushed ${tag}`);
