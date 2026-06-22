@@ -3,13 +3,13 @@
   "version": "1.1.0",
   "description": "An opinionated, physics-based toast component for Svelte. Port of sileo.",
   "license": "MIT",
-  "author": "Alexis Garcia <gvrciary@gmail.com>",
-  "homepage": "https://svelte-sileo.gvrciary.dev",
+  "author": "Alexis Garcia <alexisgvrcia@gmail.com>",
+  "homepage": "https://svelte-sileo.alexisgvrcia.dev",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gvrciary/svelte-sileo.git"
+    "url": "git+https://github.com/alexisgvrcia/svelte-sileo.git"
   },
-  "bugs": "https://github.com/gvrciary/svelte-sileo/issues",
+  "bugs": "https://github.com/alexisgvrcia/svelte-sileo/issues",
   "type": "module",
   "svelte": "./dist/index.js",
   "types": "./dist/index.d.ts",

@@ -63,7 +63,7 @@
 				</svg>
 			</button>
 			<a
-				href="https://github.com/gvrciary/svelte-sileo"
+				href="https://github.com/alexisgvrcia/svelte-sileo"
 				target="_blank"
 				rel="noopener noreferrer"
 				class="inline-flex items-center justify-center gap-2 h-10 px-4 rounded-xl text-sm font-medium bg-accent text-foreground hover:bg-accent-hover active:scale-[0.98] transition-all"

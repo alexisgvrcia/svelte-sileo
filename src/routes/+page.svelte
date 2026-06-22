@@ -15,7 +15,7 @@
     }
 </script>
 
-<div class="min-h-dvh w-full flex flex-col">
+<div class="min-h-svh w-full flex flex-col">
     <div class="max-w-4xl w-full mx-auto px-6 flex-1 flex flex-col">
         <div class="flex-1 flex flex-col gap-12">
             <Hero />

@@ -2,12 +2,12 @@
 	<span class="text-xs text-muted-foreground">
 		crafted by
 		<a
-			href="https://gvrciary.dev/"
+			href="https://alexisgvrcia.dev/"
 			target="_blank"
 			rel="noopener noreferrer"
 			class="text-foreground hover:text-foreground-hover hover:underline transition-colors"
 		>
-			gvrciary
+		alexisgvrcia
 		</a>
 	</span>
 </footer>
