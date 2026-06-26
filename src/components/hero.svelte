@@ -44,7 +44,7 @@
 			<button
 				type="button"
 				onclick={showExample}
-				class="inline-flex items-center justify-center gap-2 h-10 px-4 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 active:scale-[0.98] transition-all"
+				class="inline-flex items-center cursor-pointer justify-center gap-2 h-10 px-4 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 active:scale-[0.98] transition-all"
 			>
 				Show Example
 				<svg

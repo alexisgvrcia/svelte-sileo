@@ -63,3 +63,8 @@ body {
     --sh-sign: #808080;
     --sh-comment: #6a9955;
 }
+
+::selection {
+    background-color: var(--color-foreground);
+    color: var(--color-background);
+}
