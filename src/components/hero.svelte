@@ -29,15 +29,18 @@
 	}
 </script>
 
-<main class="flex flex-col items-center pt-24 pb-8">
-	<h1 class="text-7xl sm:text-8xl font-semibold tracking-tighter">
-		Svelte-Sileo<span class="text-neutral-300">.</span>
-	</h1>
+	<main class="flex flex-col items-center pt-24 pb-8">
+		<h1 class="text-7xl sm:text-8xl font-semibold tracking-tighter">
+			Svelte toast library<span class="text-neutral-300">.</span>
+		</h1>
+		<p class="mt-3 text-sm font-medium text-neutral-300 text-center tracking-wide">
+			Svelte-Sileo for Svelte 5 apps
+		</p>
 
-	<p class="mt-5 text-[15px] text-neutral-400 text-center max-w-md leading-relaxed">
-		An opinionated toast component for Svelte. Gooey SVG morphing, spring physics, and a minimal
-		API — beautiful by default.
-	</p>
+		<p class="mt-5 text-[15px] text-neutral-400 text-center max-w-md leading-relaxed">
+			A physics-based toast library for Svelte with gooey SVG morphing, promise flows, inline actions,
+			and a minimal API that stays easy to ship.
+		</p>
 
 	<div class="flex flex-col items-center gap-5 mt-8">
 		<div class="flex flex-wrap items-center justify-center gap-2">

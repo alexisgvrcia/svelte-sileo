@@ -1,0 +1,28 @@
+# svelte-sileo
+
+Svelte-Sileo is a toast library for Svelte 5.
+
+It provides gooey SVG morphing, spring-driven motion, promise toasts, inline action buttons, single or multiple toast modes, and support for custom Svelte components inside the toast body.
+
+Primary website: https://svelte-sileo.alexisgvrcia.dev/
+Repository: https://github.com/alexisgvrcia/svelte-sileo
+Package: https://www.npmjs.com/package/svelte-sileo
+
+Install:
+npm install svelte-sileo
+
+Quick start:
+- Render one Toaster component near the root of the app.
+- Import the sileo API where you need to trigger notifications.
+- Use sileo.success, sileo.error, sileo.warning, sileo.info, sileo.action, or sileo.promise.
+
+Key behavior:
+- Single mode replaces the current toast by default.
+- Multiple mode stacks toasts.
+- Passing a stable id updates a toast in place.
+- description can be text or a Svelte component.
+- duration: null keeps a toast visible.
+
+Recommended links:
+- Home and examples: https://svelte-sileo.alexisgvrcia.dev/
+- Documentation summary in repo: https://github.com/alexisgvrcia/svelte-sileo/blob/main/LLM.md
