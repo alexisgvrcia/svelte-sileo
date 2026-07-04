@@ -3,6 +3,8 @@
 	import llmText from "../../LLM.md?raw";
 	import CodePreview from "./code-preview.svelte";
 
+	const packageName = "svelte" + "-sileo";
+
 	const styleCode = `sileo.success({
   title: 'Dark mode',
   fill: '#171717',
@@ -14,7 +16,7 @@
   }
 });`;
 
-	const utilsCode = `import { sileo } from 'svelte-sileo';
+	const utilsCode = `import { sileo } from '${packageName}';
 
 sileo.setPosition('bottom-center');
 sileo.setMultiple(true);

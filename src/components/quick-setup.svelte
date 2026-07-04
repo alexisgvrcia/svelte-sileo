@@ -1,8 +1,10 @@
 <script lang="ts">
 	import CodePreview from './code-preview.svelte';
 
+	const packageName = "svelte" + "-sileo";
+
 	const code = `<script lang="ts">
-  import { Toaster, sileo } from 'svelte-sileo';
+  import { Toaster, sileo } from '${packageName}';
 <\/script>
 
 <Toaster position="top-right" />
