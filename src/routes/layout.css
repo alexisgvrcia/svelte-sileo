@@ -49,6 +49,40 @@
 }
 
 @layer utilities {
+    @keyframes enter-up {
+        from {
+            opacity: 0;
+            transform: translateY(12px);
+            filter: blur(2px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+            filter: blur(0);
+        }
+    }
+
+    @keyframes enter-soft {
+        from {
+            opacity: 0;
+            filter: blur(2px);
+        }
+
+        to {
+            opacity: 1;
+            filter: blur(0);
+        }
+    }
+
+    .animate-enter-up {
+        animation: enter-up 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    .animate-enter-soft {
+        animation: enter-soft 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
     * {
         scrollbar-width: thin;
         scrollbar-color: #262626 transparent;

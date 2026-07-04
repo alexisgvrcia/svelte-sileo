@@ -37,11 +37,21 @@
 <div class="min-h-svh w-full flex flex-col">
     <div class="max-w-4xl w-full mx-auto px-6 flex-1 flex flex-col">
         <div class="flex-1 flex flex-col gap-12">
-            <Hero />
-            <QuickSetup />
-            <ToastDemo {position} onpositionchange={handlePositionChange} />
-            <DocsReference />
+            <div class="animate-enter-up">
+                <Hero />
+            </div>
+            <div class="animate-enter-up [animation-delay:80ms] [animation-fill-mode:both]">
+                <QuickSetup />
+            </div>
+            <div class="animate-enter-up [animation-delay:160ms] [animation-fill-mode:both]">
+                <ToastDemo {position} onpositionchange={handlePositionChange} />
+            </div>
+            <div class="animate-enter-soft [animation-delay:220ms] [animation-fill-mode:both]">
+                <DocsReference />
+            </div>
         </div>
-        <Footer />
+        <div class="animate-enter-soft [animation-delay:300ms] [animation-fill-mode:both]">
+            <Footer />
+        </div>
     </div>
 </div>
