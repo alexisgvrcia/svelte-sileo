@@ -117,6 +117,7 @@
     let applied = $state<string | undefined>(undefined);
     let isExpanded = $state(false);
     let autopilotInterrupted = $state(false);
+    let autopilotStartedAt = $state(Date.now());
     let ready = $state(false);
     let pillWidth = $state(0);
     let contentHeight = $state(0);
@@ -148,6 +149,7 @@
             view = next;
             applied = refreshKey;
             autopilotInterrupted = false;
+            autopilotStartedAt = Date.now();
             isExpanded = false;
             const hk = `${next.toastState}-${next.title}`;
             headerLayer = {
@@ -185,6 +187,17 @@
     let swapTimer: ReturnType<typeof setTimeout> | null = null;
     let lastRefreshKey: string | undefined;
     let pending: { key?: string; payload: View } | null = null;
+
+    function clearAutopilotTimers() {
+        if (autoExpandTimer) {
+            clearTimeout(autoExpandTimer);
+            autoExpandTimer = null;
+        }
+        if (autoCollapseTimer) {
+            clearTimeout(autoCollapseTimer);
+            autoCollapseTimer = null;
+        }
+    }
 
     const pillSpring = spring(
         { x: 0, width: HEIGHT, height: HEIGHT },
@@ -389,6 +402,7 @@
             applyView(currentNext);
             applied = undefined;
             autopilotInterrupted = false;
+            autopilotStartedAt = Date.now();
             isExpanded = false;
             pending = null;
             lastRefreshKey = currentRefreshKey;
@@ -405,20 +419,15 @@
 
         if (open) {
             pending = { key: currentRefreshKey, payload: currentNext };
-            if (autoExpandTimer) {
-                clearTimeout(autoExpandTimer);
-                autoExpandTimer = null;
-            }
-            if (autoCollapseTimer) {
-                clearTimeout(autoCollapseTimer);
-                autoCollapseTimer = null;
-            }
+            clearAutopilotTimers();
             isExpanded = false;
             swapTimer = setTimeout(() => {
                 swapTimer = null;
                 if (!pending) return;
                 applyView(pending.payload);
                 applied = pending.key;
+                autopilotInterrupted = false;
+                autopilotStartedAt = Date.now();
                 pending = null;
             }, SWAP_COLLAPSE_MS);
         } else {
@@ -426,6 +435,7 @@
             applyView(currentNext);
             applied = currentRefreshKey;
             autopilotInterrupted = false;
+            autopilotStartedAt = Date.now();
             isExpanded = false;
         }
     });
@@ -433,13 +443,16 @@
     $effect(() => {
         void applied;
         if (pending) {
+            clearAutopilotTimers();
             isExpanded = false;
             return;
         }
-        if (!hasDesc) return;
+        if (!hasDesc) {
+            clearAutopilotTimers();
+            return;
+        }
 
-        if (autoExpandTimer) clearTimeout(autoExpandTimer);
-        if (autoCollapseTimer) clearTimeout(autoCollapseTimer);
+        clearAutopilotTimers();
 
         if (exiting || !allowExpand) {
             isExpanded = false;
@@ -453,29 +466,41 @@
         if (autoExpandDelayMs == null && autoCollapseDelayMs == null) return;
 
         const expandDelay = autoExpandDelayMs ?? 0;
-        const collapseDelay = autoCollapseDelayMs ?? 0;
-        const visibleDuration = Math.max(0, collapseDelay - expandDelay);
+        const collapseDelay = autoCollapseDelayMs;
+        const startedAt = autopilotStartedAt;
+        const elapsed = Math.max(0, Date.now() - startedAt);
 
         const scheduleCollapse = () => {
-            if (visibleDuration <= 0) return;
+            if (collapseDelay == null) return;
+            const remaining =
+                collapseDelay - Math.max(0, Date.now() - startedAt);
+            if (remaining <= 0) {
+                isExpanded = false;
+                return;
+            }
             autoCollapseTimer = setTimeout(() => {
                 isExpanded = false;
-            }, visibleDuration);
+            }, remaining);
         };
 
-        if (expandDelay > 0) {
-            autoExpandTimer = setTimeout(() => {
-                isExpanded = true;
-                scheduleCollapse();
-            }, expandDelay);
-        } else {
+        if (collapseDelay != null && elapsed >= collapseDelay) {
+            isExpanded = false;
+            return;
+        }
+
+        if (elapsed >= expandDelay) {
             isExpanded = true;
             scheduleCollapse();
+        } else {
+            autoExpandTimer = setTimeout(() => {
+                if (exiting || !allowExpand) return;
+                isExpanded = true;
+                scheduleCollapse();
+            }, expandDelay - elapsed);
         }
 
         return () => {
-            if (autoExpandTimer) clearTimeout(autoExpandTimer);
-            if (autoCollapseTimer) clearTimeout(autoCollapseTimer);
+            clearAutopilotTimers();
         };
     });
 
@@ -500,6 +525,8 @@
         }
         applyView(pending.payload);
         applied = pending.key;
+        autopilotInterrupted = false;
+        autopilotStartedAt = Date.now();
         pending = null;
     }
 
