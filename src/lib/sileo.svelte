@@ -116,6 +116,7 @@
 
     let applied = $state<string | undefined>(undefined);
     let isExpanded = $state(false);
+    let autopilotInterrupted = $state(false);
     let ready = $state(false);
     let pillWidth = $state(0);
     let contentHeight = $state(0);
@@ -146,6 +147,8 @@
             initialized = true;
             view = next;
             applied = refreshKey;
+            autopilotInterrupted = false;
+            isExpanded = false;
             const hk = `${next.toastState}-${next.title}`;
             headerLayer = {
                 current: { key: hk, view: next },
@@ -251,8 +254,8 @@
     });
 
     $effect(() => {
-        bodySpring.stiffness = open ? SPRING_CONFIG.stiffness : 1;
-        bodySpring.damping = open ? SPRING_CONFIG.damping : 1;
+        bodySpring.stiffness = SPRING_CONFIG.stiffness;
+        bodySpring.damping = SPRING_CONFIG.damping;
         bodySpring.set({
             height: open ? expandedContent : 0,
             opacity: open ? 1 : 0,
@@ -385,6 +388,8 @@
         if (currentRefreshKey === undefined) {
             applyView(currentNext);
             applied = undefined;
+            autopilotInterrupted = false;
+            isExpanded = false;
             pending = null;
             lastRefreshKey = currentRefreshKey;
             return;
@@ -420,6 +425,8 @@
             pending = null;
             applyView(currentNext);
             applied = currentRefreshKey;
+            autopilotInterrupted = false;
+            isExpanded = false;
         }
     });
 
@@ -439,23 +446,31 @@
             return;
         }
 
+        if (autopilotInterrupted) {
+            return;
+        }
+
         if (autoExpandDelayMs == null && autoCollapseDelayMs == null) return;
 
         const expandDelay = autoExpandDelayMs ?? 0;
         const collapseDelay = autoCollapseDelayMs ?? 0;
+        const visibleDuration = Math.max(0, collapseDelay - expandDelay);
+
+        const scheduleCollapse = () => {
+            if (visibleDuration <= 0) return;
+            autoCollapseTimer = setTimeout(() => {
+                isExpanded = false;
+            }, visibleDuration);
+        };
 
         if (expandDelay > 0) {
             autoExpandTimer = setTimeout(() => {
                 isExpanded = true;
+                scheduleCollapse();
             }, expandDelay);
         } else {
             isExpanded = true;
-        }
-
-        if (collapseDelay > 0) {
-            autoCollapseTimer = setTimeout(() => {
-                isExpanded = false;
-            }, collapseDelay);
+            scheduleCollapse();
         }
 
         return () => {
@@ -466,6 +481,7 @@
 
     function handleEnter(e: MouseEvent) {
         onmouseenter?.(e);
+        autopilotInterrupted = true;
         if (hasDesc) isExpanded = true;
     }
 

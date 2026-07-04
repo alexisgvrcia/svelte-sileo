@@ -35,7 +35,7 @@
             0.999 83.7%,
             1);
 
-    --sileo-duration: 600ms;
+    --sileo-duration: 550ms;
     --sileo-height: 40px;
     --sileo-width: 350px;
 
@@ -98,10 +98,12 @@
 
 [data-sileo-viewport][data-position^="top"] [data-sileo-toast][data-ready="true"][data-exiting="true"] {
     transform: translateY(-6px) scale(0.95);
+    margin-bottom: calc(-1 * (var(--sileo-height) + 0.75rem));
 }
 
 [data-sileo-viewport][data-position^="bottom"] [data-sileo-toast][data-ready="true"][data-exiting="true"] {
     transform: translateY(6px) scale(0.95);
+    margin-top: calc(-1 * (var(--sileo-height) + 0.75rem));
 }
 
 /* ------------------------------- SVG Canvas ------------------------------- */
@@ -199,7 +201,7 @@
 }
 
 [data-sileo-header-inner][data-exiting="true"] {
-    animation: sileo-header-exit calc(var(--sileo-duration) * 0.7) ease forwards;
+    animation: sileo-header-exit calc(var(--sileo-duration) * 0.66) var(--sileo-spring-easing) forwards;
 }
 
 /* ---------------------------------- Badge --------------------------------- */
@@ -285,7 +287,7 @@
 }
 
 [data-sileo-toast][data-ready="true"] [data-sileo-content] {
-    transition: opacity calc(var(--sileo-duration) * 0.08) ease calc(var(--sileo-duration) * 0.04);
+    transition: opacity calc(var(--sileo-duration) * 0.2) var(--sileo-spring-easing);
 }
 
 [data-sileo-content][data-edge="top"] {
@@ -301,7 +303,7 @@
 }
 
 [data-sileo-toast][data-ready="true"] [data-sileo-content][data-visible="true"] {
-    transition: opacity calc(var(--sileo-duration) * 0.6) ease calc(var(--sileo-duration) * 0.3);
+    transition: opacity calc(var(--sileo-duration) * 0.45) var(--sileo-spring-easing) calc(var(--sileo-duration) * 0.12);
 }
 
 [data-sileo-description] {
@@ -387,19 +389,19 @@
 }
 
 [data-sileo-slide-wrapper][data-slide-from="left"]>[data-sileo-toast]:not([data-ready="true"]) {
-    transform: translateX(-40px) scale(0.95);
+    transform: translateX(-12px) scale(0.95);
 }
 
 [data-sileo-slide-wrapper][data-slide-from="right"]>[data-sileo-toast]:not([data-ready="true"]) {
-    transform: translateX(40px) scale(0.95);
+    transform: translateX(12px) scale(0.95);
 }
 
 [data-sileo-slide-wrapper][data-slide-from="up"]>[data-sileo-toast]:not([data-ready="true"]) {
-    transform: translateY(-40px) scale(0.95);
+    transform: translateY(-12px) scale(0.95);
 }
 
 [data-sileo-slide-wrapper][data-slide-from="down"]>[data-sileo-toast]:not([data-ready="true"]) {
-    transform: translateY(40px) scale(0.95);
+    transform: translateY(12px) scale(0.95);
 }
 
 /* -------------------------------- Viewports ------------------------------- */

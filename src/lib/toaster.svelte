@@ -1,8 +1,9 @@
 <script lang="ts">
+    import { flip } from "svelte/animate";
     import type { Snippet } from "svelte";
     import { onDestroy } from "svelte";
     import { SvelteMap } from "svelte/reactivity";
-    import { DEFAULT_TOAST_DURATION } from "./constants";
+    import { DEFAULT_TOAST_DURATION, EXIT_DURATION } from "./constants";
     import Sileo from "./sileo.svelte";
     import type { SileoItem } from "./store";
     import { sileo, toastStore } from "./store";
@@ -40,11 +41,14 @@
         pos.startsWith("top") ? ("bottom" as const) : ("top" as const);
 
     const timeoutKey = (t: SileoItem) => `${t.id}:${t.instanceId}`;
+    const resolveDuration = (t: SileoItem) =>
+        t.duration ?? DEFAULT_TOAST_DURATION;
 
     let toasts = $state<SileoItem[]>([]);
     let hoveredId = $state<string | undefined>(undefined);
-    let hovering = $derived(hoveredId !== undefined);
     const timers = new SvelteMap<string, ReturnType<typeof setTimeout>>();
+    const deadlines = new SvelteMap<string, number>();
+    const remaining = new SvelteMap<string, number>();
 
     const handlersCache = new SvelteMap<
         string,
@@ -73,6 +77,8 @@
     function clearAllTimers() {
         for (const t of timers.values()) clearTimeout(t);
         timers.clear();
+        deadlines.clear();
+        remaining.clear();
     }
 
     function dismissToast(id: string) {
@@ -83,24 +89,24 @@
             prev.map((t) => (t.id === id ? { ...t, exiting: true } : t)),
         );
 
-        const exitDuration = DEFAULT_TOAST_DURATION * 0.1;
         setTimeout(
             () => toastStore.update((prev) => prev.filter((t) => t.id !== id)),
-            exitDuration,
+            EXIT_DURATION,
         );
     }
 
     function schedule(items: SileoItem[]) {
-        if (hovering) return;
-
         for (const item of items) {
             if (item.exiting) continue;
+            if (item.id === hoveredId) continue;
             const key = timeoutKey(item);
             if (timers.has(key)) continue;
 
-            const dur = item.duration ?? DEFAULT_TOAST_DURATION;
+            const dur = remaining.get(key) ?? resolveDuration(item);
             if (dur === null || dur <= 0) continue;
 
+            deadlines.set(key, Date.now() + dur);
+            remaining.delete(key);
             timers.set(
                 key,
                 setTimeout(() => dismissToast(item.id), dur),
@@ -108,11 +114,29 @@
         }
     }
 
+    function pauseToastTimer(toastId: string) {
+        const item = toasts.find((t) => t.id === toastId && !t.exiting);
+        if (!item) return;
+
+        const key = timeoutKey(item);
+        const timer = timers.get(key);
+        if (!timer) return;
+
+        clearTimeout(timer);
+        timers.delete(key);
+
+        const deadline = deadlines.get(key);
+        if (deadline !== undefined) {
+            remaining.set(key, Math.max(0, deadline - Date.now()));
+            deadlines.delete(key);
+        }
+    }
+
     function createHandlers(toastId: string) {
         return {
             enter: () => {
                 hoveredId = toastId;
-                clearAllTimers();
+                pauseToastTimer(toastId);
             },
             leave: () => {
                 hoveredId = undefined;
@@ -129,7 +153,15 @@
             if (!toastKeys.has(key)) {
                 clearTimeout(timer);
                 timers.delete(key);
+                deadlines.delete(key);
+                remaining.delete(key);
             }
+        }
+        for (const key of deadlines.keys()) {
+            if (!toastKeys.has(key)) deadlines.delete(key);
+        }
+        for (const key of remaining.keys()) {
+            if (!toastKeys.has(key)) remaining.delete(key);
         }
         for (const id of handlersCache.keys()) {
             if (!toastIds.has(id)) handlersCache.delete(id);
@@ -221,6 +253,7 @@
             <div
                 data-sileo-slide-wrapper
                 data-slide-from={item.slideFrom ?? undefined}
+                animate:flip={{ duration: EXIT_DURATION, easing: (t) => t }}
             >
                 <Sileo
                     id={item.id}
