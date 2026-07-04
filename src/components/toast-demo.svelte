@@ -107,7 +107,7 @@
 	}
 </script>
 
-<div class="flex flex-col items-center gap-8 pb-8">
+	<div class="flex flex-col items-center gap-8 pb-8">
 	<div class="w-full max-w-xl">
 		<p
 			class="text-[11px] text-neutral-300 tracking-widest uppercase font-medium text-center mb-3"
@@ -118,7 +118,7 @@
 			{#each demos as demo}
 				<button
 					type="button"
-					class="inline-flex items-center justify-center font-medium transition-all cursor-pointer active:scale-95 h-9 px-4 rounded-xl text-xs bg-accent text-muted-foreground hover:bg-accent-hover hover:text-foreground"
+					class="inline-flex items-center justify-center font-medium cursor-pointer h-9 px-4 rounded-xl text-xs bg-accent text-muted-foreground hover:bg-accent-hover hover:text-foreground active:scale-[0.96] transition-[transform,background-color,color] duration-250 ease-out"
 					onclick={() => handleDemo(demo)}
 				>
 					{demo.label}
@@ -133,10 +133,10 @@
 		>
 			Mode
 		</p>
-		<div class="flex items-center justify-center gap-2 px-6">
+		<div class="flex items-center justify-center gap-2 px-6 rounded-2xl bg-accent/20 p-1">
 			<button
 				type="button"
-				class="inline-flex items-center justify-center font-medium transition-all cursor-pointer active:scale-95 h-9 px-4 rounded-xl text-xs {!multiple
+				class="inline-flex items-center justify-center font-medium cursor-pointer h-9 px-4 rounded-xl text-xs active:scale-[0.96] transition-[transform,background-color,color] duration-250 ease-out {!multiple
 					? 'bg-foreground text-background'
 					: 'bg-accent text-muted-foreground hover:bg-accent-hover hover:text-foreground'}"
 				onclick={() => handleModeChange(false)}
@@ -145,7 +145,7 @@
 			</button>
 			<button
 				type="button"
-				class="inline-flex items-center justify-center font-medium transition-all cursor-pointer active:scale-95 h-9 px-4 rounded-xl text-xs {multiple
+				class="inline-flex items-center justify-center font-medium cursor-pointer h-9 px-4 rounded-xl text-xs active:scale-[0.96] transition-[transform,background-color,color] duration-250 ease-out {multiple
 					? 'bg-foreground text-background'
 					: 'bg-accent text-muted-foreground hover:bg-accent-hover hover:text-foreground'}"
 				onclick={() => handleModeChange(true)}
@@ -168,7 +168,7 @@
 			{#each SILEO_POSITIONS as pos}
 				<button
 					type="button"
-					class="inline-flex items-center justify-center font-medium transition-all cursor-pointer active:scale-95 h-9 px-4 rounded-xl text-xs {pos ===
+					class="inline-flex items-center justify-center font-medium cursor-pointer h-9 px-4 rounded-xl text-xs active:scale-[0.96] transition-[transform,background-color,color] duration-250 ease-out {pos ===
 					position
 						? 'bg-foreground text-background'
 						: 'bg-accent text-muted-foreground hover:bg-accent-hover hover:text-foreground'}"

@@ -5,7 +5,7 @@
 			href="https://alexisgvrcia.dev/"
 			target="_blank"
 			rel="noopener noreferrer"
-			class="text-foreground hover:text-foreground-hover hover:underline transition-colors"
+			class="text-foreground hover:text-foreground-hover hover:underline transition-[color,opacity] duration-300 ease-out"
 		>
 		alexisgvrcia
 		</a>

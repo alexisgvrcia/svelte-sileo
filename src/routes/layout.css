@@ -15,56 +15,60 @@
     --color-border: #262626;
 }
 
-html {
-    scroll-behavior: smooth;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    -webkit-text-size-adjust: 100%;
-    -webkit-tap-highlight-color: transparent;
+@layer base {
+    :root {
+        --sh-identifier: #cccccc;
+        --sh-keyword: #c586c0;
+        --sh-string: #ce9178;
+        --sh-class: #4ec9b0;
+        --sh-property: #9cdcfe;
+        --sh-entity: #dcdcaa;
+        --sh-jsxliterals: #569cd6;
+        --sh-sign: #808080;
+        --sh-comment: #6a9955;
+    }
+
+    html {
+        scroll-behavior: smooth;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        -webkit-text-size-adjust: 100%;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+        font-family: var(--font-sans);
+        background-color: var(--color-background);
+        color: var(--color-foreground);
+    }
+
+    ::selection {
+        background-color: var(--color-foreground);
+        color: var(--color-background);
+    }
 }
 
-body {
-    font-family: var(--font-sans);
-    background-color: var(--color-background);
-    color: var(--color-foreground);
-}
+@layer utilities {
+    * {
+        scrollbar-width: thin;
+        scrollbar-color: #262626 transparent;
+    }
 
-* {
-    scrollbar-width: thin;
-    scrollbar-color: #262626 transparent;
-}
+    *::-webkit-scrollbar {
+        width: 4px;
+        height: 4px;
+    }
 
-*::-webkit-scrollbar {
-    width: 4px;
-    height: 4px;
-}
+    *::-webkit-scrollbar-track {
+        background: transparent;
+    }
 
-*::-webkit-scrollbar-track {
-    background: transparent;
-}
+    *::-webkit-scrollbar-thumb {
+        background: #262626;
+        border-radius: 9999px;
+    }
 
-*::-webkit-scrollbar-thumb {
-    background: #262626;
-    border-radius: 9999px;
-}
-
-*::-webkit-scrollbar-thumb:hover {
-    background: #333333;
-}
-
-:root {
-    --sh-identifier: #cccccc;
-    --sh-keyword: #c586c0;
-    --sh-string: #ce9178;
-    --sh-class: #4ec9b0;
-    --sh-property: #9cdcfe;
-    --sh-entity: #dcdcaa;
-    --sh-jsxliterals: #569cd6;
-    --sh-sign: #808080;
-    --sh-comment: #6a9955;
-}
-
-::selection {
-    background-color: var(--color-foreground);
-    color: var(--color-background);
+    *::-webkit-scrollbar-thumb:hover {
+        background: #333333;
+    }
 }
