@@ -2,7 +2,7 @@
 	let copied = $state(false);
 
 	async function copy() {
-		await navigator.clipboard.writeText("npm install sileo");
+		await navigator.clipboard.writeText("npm install svelte-sileo");
 		copied = true;
 		setTimeout(() => (copied = false), 2000);
 	}
