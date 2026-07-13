@@ -1,28 +1,18 @@
 # svelte-sileo
 
-Svelte-Sileo is a toast library for Svelte 5.
+> An opinionated Svelte 5 toast library with gooey SVG morphing, spring-driven motion, promise flows, inline actions, and custom Svelte component content.
 
-It provides gooey SVG morphing, spring-driven motion, promise toasts, inline action buttons, single or multiple toast modes, and support for custom Svelte components inside the toast body.
+Install with `npm install svelte-sileo`. Render one `<Toaster />` near the application root, then use the `sileo` API to display and manage notifications.
 
-Primary website: https://svelte-sileo.alexisgvrcia.dev/
-Repository: https://github.com/alexisgvrcia/svelte-sileo
-Package: https://www.npmjs.com/package/svelte-sileo
+By default, a new toast replaces the current one. Enable `multiple` to stack toasts, or provide a stable `id` to update a toast in place.
 
-Install:
-npm install svelte-sileo
+## Documentation
 
-Quick start:
-- Render one Toaster component near the root of the app.
-- Import the sileo API where you need to trigger notifications.
-- Use sileo.success, sileo.error, sileo.warning, sileo.info, sileo.action, or sileo.promise.
+- [Website](https://svelte-sileo.alexisgvrcia.dev/): Product overview and interactive examples.
+- [README](https://raw.githubusercontent.com/alexisgvrcia/svelte-sileo/main/README.md): Installation, quick start, API reference, options, styling, and usage examples.
+- [LLM guide](https://raw.githubusercontent.com/alexisgvrcia/svelte-sileo/main/LLM.md): Concise API reference and guidance for generating code with svelte-sileo.
+- [npm package](https://www.npmjs.com/package/svelte-sileo): Published package, versions, and installation details.
 
-Key behavior:
-- Single mode replaces the current toast by default.
-- Multiple mode stacks toasts.
-- Passing a stable id updates a toast in place.
-- description can be text or a Svelte component.
-- duration: null keeps a toast visible.
+## Source
 
-Recommended links:
-- Home and examples: https://svelte-sileo.alexisgvrcia.dev/
-- Documentation summary in repo: https://github.com/alexisgvrcia/svelte-sileo/blob/main/LLM.md
+- [Repository](https://github.com/alexisgvrcia/svelte-sileo): Source code, issues, and release history.
